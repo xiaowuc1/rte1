@@ -5,25 +5,25 @@ signature_grader: {entry: grader.cpp, header: problem.h}
 test_cases:
 - points: 1000
   batched:
+  - {in: Small1.in, out: Small1.out}
+  - {in: Small2.in, out: Small2.out}
+  - {in: Rand.in, out: Rand.out}
+  - {in: RandDense.in, out: RandDense.out}
   - {in: Grid2.in, out: Grid2.out}
   - {in: Grid3.in, out: Grid3.out}
   - {in: IPM1.in, out: IPM1.out}
   - {in: IPM2.in, out: IPM2.out}
   - {in: IPM3.in, out: IPM3.out}
   - {in: IPM4.in, out: IPM4.out}
-  - {in: LapJL_chimera.in, out: LapJL_chimera.out}
   - {in: LapJL_Grid2.in, out: LapJL_Grid2.out}
   - {in: LapJL_Grid3.in, out: LapJL_Grid3.out}
-  - {in: LapJL_GrownGraph.in, out: LapJL_GrownGraph.out}
-  - {in: LapJL_HyperCube.in, out: LapJL_HyperCube.out}
   - {in: LapJL_RandRegular.in, out: LapJL_RandRegular.out}
+  - {in: LapJL_HyperCube.in, out: LapJL_HyperCube.out}
+  - {in: LapJL_GrownGraph.in, out: LapJL_GrownGraph.out}
   - {in: LapJL_semiwted_chimera1.in, out: LapJL_semiwted_chimera1.out}
   - {in: LapJL_semiwted_chimera2.in, out: LapJL_semiwted_chimera2.out}
   - {in: LapJL_semiwted_chimera3.in, out: LapJL_semiwted_chimera3.out}
   - {in: LapJL_wted_chimera1.in, out: LapJL_wted_chimera1.out}
   - {in: LapJL_wted_chimera2.in, out: LapJL_wted_chimera2.out}
   - {in: LapJL_wted_chimera3.in, out: LapJL_wted_chimera3.out}
-  - {in: Rand.in, out: Rand.out}
-  - {in: RandDense.in, out: RandDense.out}
-  - {in: Small1.in, out: Small1.out}
-  - {in: Small2.in, out: Small2.out}
+  - {in: LapJL_chimera.in, out: LapJL_chimera.out}

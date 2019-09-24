@@ -25,7 +25,7 @@ def getNorm(n, y, L):
 def getL(judge_input):
     # from the raw input
     n = int(judge_input[1].split()[0])
-    m = int(judge_input[1].split()[1])
+    m = int(judge_input[1].split()[2])
     wMat = []
     for _ in range(n):
         wMat.append(dict())

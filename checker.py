@@ -5,22 +5,21 @@ import subprocess
 from collections import defaultdict
 from re import split as resplit
 
-from six.moves import zip, filter
-from decimal import *
-from math import sqrt
+import math
+import hashlib
 
 def getNorm(n, y, L):
     rhs = []
     for _ in range(n):
-        rhs.append(Decimal(0))
+        rhs.append(0.0)
     for i in range(n):
         # Ly component
         for j in L[i]:
             rhs[i] += y[j] * L[i][j]
-    ret = Decimal(0)
+    ret = 0.0
     for i in range(n):
         ret += y[i] * rhs[i]
-    return ret.sqrt()
+    return ret
 
 def getL(judge_input):
     # from the raw input
@@ -33,33 +32,25 @@ def getL(judge_input):
         data = judge_input[i].split()
         u = int(data[0]) - 1
         v = int(data[1]) - 1
-        w = Decimal(data[2])
+        w = float(data[2])
         wMat[u][v] = w
         wMat[v][u] = w
     L = []
     for _ in range(n):
         L.append(dict())
     for i in range(n):
-        wDeg = Decimal(0)
+        wDeg = 0.0
         for j in wMat[i]:
             wDeg += wMat[i][j]
             L[i][j] = -wMat[i][j]
         L[i][i] = wDeg
     return L
 
-"""
-  - {in: Grid2.in, out: Grid2.out, points: 10}
-  - {in: Grid3.in, out: Grid3.out, points: 10}
-  - {in: IPM1.in, out: IPM1.out, points: 10}
-  - {in: IPM2.in, out: IPM2.out, points: 10}
-  - {in: IPM3.in, out: IPM3.out, points: 10}
-  - {in: IPM4.in, out: IPM4.out, points: 10}
-  - {in: Path.in, out: Path.out, points: 10}
-  - {in: Rand.in, out: Rand.out, points: 10}
-  - {in: RandDense.in, out: RandDense.out, points: 10}
-"""
-
 def check(process_output, judge_output, judge_input, point_value, execution_time, **kwargs):
+    dp = dict()
+    m = hashlib.md5()
+    m.update(process_output)
+    md5hash = m.hexdigest()
     try:
         process_lines = process_output.decode("utf-8").split("\n")[:-1]
         judge_lines = judge_output.decode("utf-8").split("\n")[1:-1]
@@ -71,8 +62,13 @@ def check(process_output, judge_output, judge_input, point_value, execution_time
         if n != len(process_lines):
             return False
 
-        barx = [Decimal(x) for x in judge_lines]
-        x = [Decimal(z) for z in process_lines]
+        barx = [float(x) for x in judge_lines]
+        try:
+            x = [float(z) for z in process_lines]
+        except:
+            assert False, "illegal output"
+        for y in x:
+            assert not math.isnan(y), "nan detected"
 
         assert len(barx) == n, "barx has wrong length {}".format(len(barx))
         assert len(x) == n, "x has wrong length {}".format(len(x))
@@ -82,10 +78,12 @@ def check(process_output, judge_output, judge_input, point_value, execution_time
 
         xDiffNorm = getNorm(n, xDiff, L)
         xNorm = getNorm(n, barx, L)
-        if xDiffNorm > Decimal("0.1") * xNorm:
-            return CheckerResult(False, 0, "norm out of range")
+        if xDiffNorm > 0.1 * xNorm:
+            return CheckerResult(False, 0, "norm out of range {}".format(md5hash))
         bestTime = 10.
+        if id in dp:
+            bestTime = dp[id]
         ratio = bestTime / execution_time
-        return CheckerResult(True, point_value * ratio**2)
+        return CheckerResult(True, point_value * ratio**2, "{}".format(md5hash))
     except Exception as e:
         return CheckerResult(False, 0, "{}".format(e))

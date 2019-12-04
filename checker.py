@@ -8,17 +8,11 @@ from re import split as resplit
 import math
 
 def getNorm(n, y, L):
-    rhs = []
-    for _ in range(n):
-        rhs.append(0.0)
-    for i in range(n):
-        # Ly component
-        for j in L[i]:
-            rhs[i] += y[j] * L[i][j]
     ret = 0.0
     for i in range(n):
-        ret += y[i] * rhs[i]
-    return math.sqrt(ret)
+        for j in L[i]:
+            ret += L[i][j] * ((y[j] - y[i]) ** 2)
+    return ret ** 0.5
 
 def getL(judge_input):
     # from the raw input
@@ -34,16 +28,7 @@ def getL(judge_input):
         w = float(data[2])
         wMat[u][v] = w
         wMat[v][u] = w
-    L = []
-    for _ in range(n):
-        L.append(dict())
-    for i in range(n):
-        wDeg = 0.0
-        for j in wMat[i]:
-            wDeg += wMat[i][j]
-            L[i][j] = -wMat[i][j]
-        L[i][i] = wDeg
-    return L
+    return wMat
 
 def check(process_output, judge_output, judge_input, point_value, execution_time, **kwargs):
     try:
@@ -73,9 +58,15 @@ def check(process_output, judge_output, judge_input, point_value, execution_time
         xDiffNorm = getNorm(n, xDiff, L)
         xNorm = getNorm(n, barx, L)
         if xDiffNorm > 0.1 * xNorm:
-            return CheckerResult(False, 0, "norm out of range: xNorm = {}, xDiffNorm = {}, ratio = {}".format(xNorm, xDiffNorm, xDiffNorm / xNorm))
+            return CheckerResult(
+                False, 
+                0,
+                "xNorm = {0:.2f}, diff = {1:.2f}, ratio = {2:.2f}".format(xNorm, xDiffNorm, xDiffNorm / xNorm))
         bestTime = 10.
         ratio = bestTime / execution_time
-        return CheckerResult(True, point_value * ratio**2, "norm in range: xNorm = {}, xDiffNorm = {}, ratio = {}".format(xNorm, xDiffNorm, xDiffNorm / xNorm))
+        return CheckerResult(
+            True,
+            point_value * ratio**2,
+            "xNorm = {0:.2f}, diff = {1:.2f}, ratio = {2:.2f}".format(xNorm, xDiffNorm, xDiffNorm / xNorm))
     except Exception as e:
         return CheckerResult(False, 0, "{}".format(e))

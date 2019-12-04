@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <iomanip>
+#include <ios>
+#include <iostream>
+#include <vector>
 #include "problem.h"
 
 using namespace std;
